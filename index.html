@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orbtopia</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%238d5a32' d='M4 14 16 8l12 6-12 6z'/%3E%3Cpath fill='%236d4328' d='M4 14v8l12 6V20z'/%3E%3Cpath fill='%23543a28' d='M28 14v8l-12 6V20z'/%3E%3Cpath fill='%2386d464' d='M4 14 16 8l12 6-12 6z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="hud" hidden>
+  <div class="tl">
+    <div class="card clock">
+      <div class="dial" id="dial">
+        <div class="dial-sky" id="dialSky"></div>
+        <div class="dial-stars" id="dialStars"></div>
+        <div class="orb" id="orb"></div>
+        <div class="hill2"></div>
+        <div class="hill"></div>
+        <div class="tree"></div>
+      </div>
+      <div class="clock-txt">
+        <div class="period" id="period">Morning</div>
+        <div class="time"><b id="clock">9:41</b><small id="ampm">AM</small></div>
+      </div>
+    </div>
+    <div class="chip weather">
+      <span class="wx" id="wxIcon" aria-hidden="true"></span>
+      <span id="wxLabel">Sunny</span>
+      <i class="sep"></i>
+      <span id="dayLabel">Day 1</span>
+    </div>
+    <button class="chip ca" type="button" data-ca title="Copy contract address">
+      <span class="k">CA</span>
+      <b>TBA</b>
+    </button>
+  </div>
+
+  <div class="tr">
+    <button class="round launch" data-a="launch" title="A new friend drops in (G)" aria-label="A new friend drops in">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-8" stroke="#58a846" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M12 13C11.6 8.6 8.4 6 4 6.2c.1 4.5 3.3 7.2 8 7z" fill="#8fdc6f" stroke="#58a846"/><path d="M12 11.2c.3-4.6 3.5-7.4 8-7.3-.1 4.6-3.3 7.4-8 7.3z" fill="#b6ec8f" stroke="#58a846"/><path d="M7.5 21h9" stroke="#b07a57" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
+      <span class="kbd">G</span>
+    </button>
+    <button class="round" data-a="photo" title="Photo (P)" aria-label="Take a photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.2a2 2 0 0 1 2-2h1.8l1.3-1.8h5.8l1.3 1.8H18a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" fill="currentColor"/><circle cx="12" cy="12.6" r="3.4" fill="#fffaf0"/><circle cx="12" cy="12.6" r="1.8" fill="currentColor"/></svg>
+      <span class="kbd">P</span>
+    </button>
+    <button class="round" id="soundBtn" data-a="sound" title="Sound (M)" aria-label="Sound on or off">
+      <svg id="soundOn" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 9.5h3l4.2-3.6c.5-.4 1.3 0 1.3.6v11c0 .6-.8 1-1.3.6L7.5 14.5h-3a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1z" fill="currentColor"/><path d="M16 9.2a4 4 0 0 1 0 5.6M18.6 6.8a7.4 7.4 0 0 1 0 10.4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      <svg id="soundOff" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M4.5 9.5h3l4.2-3.6c.5-.4 1.3 0 1.3.6v11c0 .6-.8 1-1.3.6L7.5 14.5h-3a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1z" fill="currentColor"/><path d="M16 10l5 5M21 10l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      <span class="kbd">M</span>
+    </button>
+    <button class="round" data-a="help" title="Help (H)" aria-label="Help">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="currentColor"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.3c-.6.3-1 .8-1 1.5v.4" stroke="#fffaf0" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="12" cy="16.9" r="1.15" fill="#fffaf0"/></svg>
+      <span class="kbd">H</span>
+    </button>
+    <a class="round x" href="https://x.com/ORBTOPIA_ROBIN" target="_blank" rel="noopener noreferrer" aria-label="ORBTOPIA_ROBIN on X" title="ORBTOPIA_ROBIN on X">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+  </div>
+
+  <div class="reticle" id="reticle"><i></i></div>
+  <div class="banner" id="banner"><b id="bannerTitle"></b><div id="bannerSub"></div></div>
+
+  <div class="prompt" id="prompt" hidden>
+    <span class="kbd" id="promptKey">F</span>
+    <span id="promptLabel">Pet</span>
+  </div>
+
+  <div class="bottom">
+    <div class="chip blockname" id="blockName"><i id="swatch"></i><span id="blockLabel">Grass</span></div>
+    <div class="card hotbar compact" id="hotbar"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <div class="card stitch help" id="help" role="dialog" aria-modal="true" hidden>
+    <h2>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19C4 11 9 4.5 19.5 4.5 19.5 14 14 19.5 5 19z" fill="#8fdc6f" stroke="#58a846"/><path d="M5 19c3-4.5 6.5-8 10.5-10.5" stroke="#58a846" fill="none"/></svg>
+      How to play
+    </h2>
+    <p class="lede">Wander, make friends, and sail out to build. Sunny Meadow stays just as it is. Dune, Frost, and Bloom Isle are yours. Captain Gus keeps the boats at the east dock, and what you build is saved on this device.</p>
+    <div class="grid">
+      <div class="sec">Getting around</div>
+      <div class="row"><span class="keys"><span class="kbd">W</span><span class="kbd">A</span><span class="kbd">S</span><span class="kbd">D</span></span>Walk</div>
+      <div class="row"><span class="keys"><span class="kbd wide">Space</span></span>Jump · hold to glide</div>
+      <div class="row"><span class="keys"><span class="kbd">⇧</span></span>Run</div>
+      <div class="row"><span class="keys"><span class="kbd">Q</span><span class="kbd">E</span></span>Turn camera</div>
+      <div class="row"><span class="keys"><span class="kbd wide">drag</span></span>Look around</div>
+      <div class="row"><span class="keys"><span class="kbd wide">scroll</span></span>Zoom</div>
+      <div class="sec">Building · outer islands</div>
+      <div class="row"><span class="keys"><span class="kbd wide">click</span></span>Place block</div>
+      <div class="row"><span class="keys"><span class="kbd wide">right click</span></span>Break block</div>
+      <div class="row"><span class="keys"><span class="kbd">1</span><span class="dots">…</span><span class="kbd">=</span></span>Choose block</div>
+      <div class="row"><span class="keys"><span class="kbd">[</span><span class="kbd">]</span></span>Cycle blocks</div>
+      <div class="row"><span class="keys"><span class="kbd wide">middle click</span></span>Copy a block</div>
+      <div class="row"><span class="keys"><span class="kbd">Ctrl</span><span class="kbd">Z</span></span>Undo <span class="hint">(⇧ to redo)</span></div>
+      <div class="sec">Boats</div>
+      <div class="row"><span class="keys"><span class="kbd">B</span></span>Board / hop off</div>
+      <div class="row"><span class="keys"><span class="kbd">W</span><span class="kbd">S</span></span>Throttle</div>
+      <div class="row"><span class="keys"><span class="kbd">A</span><span class="kbd">D</span></span>Steer</div>
+      <div class="row"><span class="keys"><span class="kbd">⇧</span></span>Boost</div>
+      <div class="sec">Friends &amp; fun</div>
+      <div class="row"><span class="keys"><span class="kbd">F</span></span>Pet a friend</div>
+      <div class="row"><span class="keys"><span class="kbd">T</span></span>Talk to villagers</div>
+      <div class="row"><span class="keys"><span class="kbd">G</span></span>A new friend drops in</div>
+      <div class="row"><span class="keys"><span class="kbd">P</span></span>Take a photo</div>
+      <div class="row"><span class="keys"><span class="kbd">M</span></span>Sound on / off</div>
+      <div class="row"><span class="keys"><span class="kbd">⇧</span><span class="kbd">Del</span></span>Reset world…</div>
+    </div>
+    <div class="foot">Press H to close</div>
+  </div>
+
+  <div class="card stitch confirm" id="confirm" role="dialog" aria-modal="true" hidden>
+    <h3>Start the world over?</h3>
+    <p>Every block you placed or broke on the outer islands goes back to how it began, and the boat sails home. This can't be undone.</p>
+    <div class="btns">
+      <button class="btn ghost" data-a="keep">Keep my world <span class="kbd">Esc</span></button>
+      <button class="btn warm" data-a="reset">Reset <span class="kbd">↵</span></button>
+    </div>
+  </div>
+
+  <div class="card stitch talk" id="talk" role="dialog" hidden>
+    <div class="who" id="talkName">Mira</div>
+    <p id="talkText"></p>
+    <div class="more"><span class="kbd wide">Space</span> continue</div>
+  </div>
+
+  <div class="polaroid" id="polaroid" hidden>
+    <img id="polaroidImg" alt="Photo">
+    <div class="cap">Photo saved</div>
+  </div>
+
+  <div class="touch" id="touch">
+    <div class="stick" id="stick"><i id="thumb"></i></div>
+    <button class="jump" id="jumpBtn" type="button" aria-label="Jump">Jump</button>
+  </div>
+</div>
+
+<div id="hearts"></div>
+
+<div id="splash">
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+  <div class="logo" aria-hidden="true">
+    <span style="--c:#ff8eb8">O</span><span style="--c:#ffcf4d">r</span><span style="--c:#8ed86a">b</span><span style="--c:#7ec8ff">t</span><span style="--c:#c9a6ff">o</span><span style="--c:#ffcf4d">p</span><span style="--c:#ff8eb8">i</span><span style="--c:#ffb15c">a</span>
+    <svg class="leaf" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 36c8-22 28-28 36-28-2 16-14 30-32 32-2-2-4-3-4-4z" fill="#8ed86a"/><path d="M14 34c8-8 16-14 24-18" stroke="#58a846" stroke-width="2" fill="none"/></svg>
+  </div>
+  <div class="tag">a cozy little block world</div>
+  <div class="cubes" aria-hidden="true">
+    <div class="cube grass"><i class="top"></i><i class="left"></i><i class="right"></i></div>
+    <div class="cube bloom"><i class="top"></i><i class="left"></i><i class="right"></i><b></b></div>
+    <div class="cube wood"><i class="top"></i><i class="left"></i><i class="right"></i></div>
+  </div>
+  <div class="bar" id="bar"><i id="barFill"></i></div>
+  <button id="begin" type="button" hidden><span><i class="mouse"></i> Click anywhere to begin</span></button>
+  <div class="hills">
+    <i class="tuft a"></i><i class="tuft b"></i><i class="tuft c"></i><i class="tuft d"></i>
+  </div>
+  <a class="round x splash-x" href="https://x.com/ORBTOPIA_ROBIN" target="_blank" rel="noopener noreferrer" aria-label="ORBTOPIA_ROBIN on X" title="ORBTOPIA_ROBIN on X">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+  </a>
+  <button class="chip ca splash-ca" type="button" data-ca title="Copy contract address">
+    <span class="k">CA</span>
+    <b>TBA</b>
+  </button>
+  <div class="sound-hint"><i></i> best with sound on</div>
+  <p id="loadnote" class="loadnote"></p>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="js/game.js"></script>
+<script>
+document.querySelectorAll("[data-ca]").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    var label = btn.querySelector("b");
+    var write = navigator.clipboard && navigator.clipboard.writeText("TBA");
+    Promise.resolve(write).then(function () {
+      label.textContent = "Copied";
+      setTimeout(function () { label.textContent = "TBA"; }, 900);
+    }).catch(function () {
+      label.textContent = "TBA";
+    });
+  });
+});
+</script>
+</body>
+</html>
